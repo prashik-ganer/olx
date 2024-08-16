@@ -1,5 +1,5 @@
 from fastapi import FastAPI,HTTPException, status
-from schema import UserDetails, UserLogIn
+from server.models.UserDetails import UserDetails, UserLogIn
 from functions import hash_password, verify_password
 
 app = FastAPI()
