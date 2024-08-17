@@ -53,8 +53,13 @@ function App() {
   ]);
   return (
     <>
+<<<<<<< HEAD:src/App.jsx
       {/* <Navbar/>
       <User/>
+=======
+      <Navbar/>
+      <User login={true}/>
+>>>>>>> 0ea4cea4f05906edd416d7816301ab8b1f584a93:frontend/src/App.jsx
       <Grid/>
       <Footer/> */}
       <RouterProvider router={router}/>
