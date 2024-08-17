@@ -1,7 +1,9 @@
 from fastapi import FastAPI,HTTPException, status
-from schema import UserDetails, UserLogIn
+from server.models.UserDetails import UserDetails, UserLogIn
+from server.models.Product import Product
+from server.database import users_collection,product_collection
 from functions import hash_password, verify_password
-
+from typing import List, Optional
 app = FastAPI()
 
 users=  [] # for storing users in memory
@@ -47,7 +49,7 @@ def log_in(request: UserLogIn):
     email = request.email
     password = request.password
     
-    # Find the user by email
+    # Find the user by email j
     for user in users:
         if user['email'] == email:
             # Verify the password
@@ -64,3 +66,44 @@ def log_in(request: UserLogIn):
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid credentials"
     )
+
+
+products = []
+
+# **********************************************
+# product API
+@app.post("/product")
+def create_product(prod:Product):
+    product={
+        "product_name" : prod.product_name,
+        "category" : prod.category,
+        "price" : prod.price,
+        "negotiable" : prod.negotiable,
+        "image_paths" : prod.image_paths,
+        "short_description" : prod.short_description,
+        "product_age": prod.product_age,
+        "cost_price": prod.cost_price,
+        "user_id": prod.user_id
+    }
+    product_collection.insert_one(product)
+    return {"message":"Product added Successfully"}
+
+
+@app.get("/products")
+async def get_products(user_id: Optional[str] = None):
+    query = {}
+    if user_id is not None:
+        users['user_id'] = user_id
+
+    products_cursor = product_collection.find(query)
+    products_list = await products_cursor.to_list(length=None)
+
+    if not products_list:
+        if user_id is not None:
+            raise HTTPException(
+                status_code=404,
+                detail="No products found for this user"
+            )
+        return {"products": []}
+
+    return {"products": products_list}

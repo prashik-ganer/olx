@@ -18,8 +18,10 @@ import {
 } from "react-router-dom";
 import Sell from './routes/buyAndSell/sell'
 
+
 function App() {
   // const [count, setCount] = useState(0)
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -40,6 +42,10 @@ function App() {
             {
               path: "sell", // Note: no leading slash here
               element: <Sell/>
+            },
+            { 
+              path: "path", // Note: no leading slash here
+              element: <productDetails/>
             }
           ]
         },
