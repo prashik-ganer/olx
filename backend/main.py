@@ -1,12 +1,16 @@
-from fastapi import FastAPI,HTTPException, status
-from server.models.UserDetails import UserDetails, UserLogIn
-from server.models.Product import Product
-from server.database import users_collection,product_collection
-from functions import hash_password, verify_password
-from typing import List, Optional
+from fastapi import FastAPI,HTTPException, status, Depends
+from backend.schema.User import UserSignUp, UserLogIn
+from backend.hashing import Hash
+from backend.server.models.Product import Product
+from backend.utility.database import users_collection,product_collection
+from backend.utility.oauth import get_current_user
+from dotenv import load_dotenv
+from backend.utility.jwttoken import create_access_token
+
 app = FastAPI()
 
-users=  [] # for storing users in memory
+# Load environment variables from .env file
+load_dotenv()
 
 # **********************************************
 # home page API
@@ -17,55 +21,40 @@ def main():
 
 # **********************************************
 # sign-up API
-@app.post("/sign-up")
-def sign_up(user: UserDetails):
-    # Check if the user already exists
-    for existing_user in users:
-        if existing_user['email'] == user.email:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Email already registered"
-            )
-    
-    # Hash the user's password
-    hashed_password = hash_password(user.password)
-    
-    # Create user object and append to the users list
-    user_object = {
-        "username": user.name,
-        "email": user.email,
-        "hall_id": user.hall_id,
-        "contact_no": user.contact_no,
-        "password": hashed_password,
-    }
-    users.append(user_object)
-    return {'message': 'User created successfully'}
+@app.post("/sign_up")
+def sign_up(request: UserSignUp):
+    user_name = request.user_name
+    password = request.password
+
+    user = users_collection.find_one({"user_name":user_name})
+
+    if user:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT,detail=f"User with {user_name} already exist.")
+    hashed_password = Hash.hash_password(password)
+    user_object = dict(request)
+    user_object["password"] = hashed_password
+    user_id =  users_collection.insert_one(user_object).inserted_id
+    return {"message":f"User created with user id: {user_id}"}
 
 
 # **********************************************
+
+
 # log-in API
 @app.post("/log-in")
 def log_in(request: UserLogIn):
-    email = request.email
+    user_name = request.user_name
     password = request.password
-    
-    # Find the user by email j
-    for user in users:
-        if user['email'] == email:
-            # Verify the password
-            if verify_password(user['password'], password):
-                return {'message': 'User logged in successfully'}
-            else:
-                raise HTTPException(
-                    status_code=status.HTTP_401_UNAUTHORIZED,
-                    detail="Invalid credentials"
-                )
-    
-    # If user is not found
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid credentials"
-    )
+    print(user_name)
+    user =  users_collection.find_one({"user_name": user_name})
+
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"User not found with {user_name}")
+
+    if not Hash.verify_password(user["password"],password):
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Wrong Username or Password")
+    access_token = create_access_token(data={"sub":user_name})
+    return {"access_token" : access_token, "token_type": "bearer"}
 
 
 products = []
@@ -73,7 +62,7 @@ products = []
 # **********************************************
 # product API
 @app.post("/product")
-def create_product(prod:Product):
+def create_product(prod:Product,current_user: dict = Depends(get_current_user)):
     product={
         "product_name" : prod.product_name,
         "category" : prod.category,
@@ -83,27 +72,8 @@ def create_product(prod:Product):
         "short_description" : prod.short_description,
         "product_age": prod.product_age,
         "cost_price": prod.cost_price,
-        "user_id": prod.user_id
+        "user_id": current_user["_id"]
     }
     product_collection.insert_one(product)
     return {"message":"Product added Successfully"}
 
-
-@app.get("/products")
-async def get_products(user_id: Optional[str] = None):
-    query = {}
-    if user_id is not None:
-        users['user_id'] = user_id
-
-    products_cursor = product_collection.find(query)
-    products_list = await products_cursor.to_list(length=None)
-
-    if not products_list:
-        if user_id is not None:
-            raise HTTPException(
-                status_code=404,
-                detail="No products found for this user"
-            )
-        return {"products": []}
-
-    return {"products": products_list}
