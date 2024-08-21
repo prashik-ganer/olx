@@ -1,0 +1,61 @@
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+.preview-section, .form-section {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.preview-section {
+  background-color: #f7f7f7;
+  border-right: 1px solid #ccc;
+}
+
+.preview img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.form-section {
+  background-color: #fff;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea {
+  height: 80px;
+}
+
+input[type="checkbox"] {
+  margin-left: 10px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.preview {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
