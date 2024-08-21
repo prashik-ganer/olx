@@ -9,7 +9,7 @@ import Layout from './routes/layout/layout'
 import BuyAndSell from './routes/buyAndSell/BuyAndSell'
 import Taxi from './routes/taxi/Taxi'
 import Canteen from './routes/canteen/Canteen'
-import ProductDetails from './routes/buyAndSell/productDetails_old'
+import ProductDetails from './routes/buyAndSell/productDetails'
 import {
   createBrowserRouter,
   RouterProvider,
