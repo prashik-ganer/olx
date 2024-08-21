@@ -9,7 +9,7 @@ import Layout from './routes/layout/layout'
 import BuyAndSell from './routes/buyAndSell/BuyAndSell'
 import Taxi from './routes/taxi/Taxi'
 import Canteen from './routes/canteen/Canteen'
-
+import ProductDetails from './routes/buyAndSell/productDetails'
 import {
   createBrowserRouter,
   RouterProvider,
@@ -17,7 +17,9 @@ import {
   // Link,
 } from "react-router-dom";
 import Sell from './routes/buyAndSell/sell'
-
+import AllProds from './routes/buyAndSell/AllProds'
+import Products from './routes/buyAndSell/Products'
+import ProductView from './routes/buyAndSell/productview'
 
 function App() {
   // const [count, setCount] = useState(0)
@@ -45,13 +47,33 @@ function App() {
             },
             { 
               path: "path", // Note: no leading slash here
-              element: <productDetails/>
-            }
+              element: <ProductDetails/>
+            },
+            { 
+              path: "allprods", // Note: no leading slash here
+              element: <AllProds/>
+            },
+            // { 
+            //   path: ":id", // Note: no leading slash here
+            //   element: <ProductDetails/>
+            // },
+            { 
+              path: "products", // Note: no leading slash here
+              element: <Products/>,
+            },
+            { 
+              path: "products/:id", // Note: no leading slash here
+              element: <ProductView/>,
+            },
           ]
         },
         {
           path:"/canteen",
           element:<Canteen/>
+        },
+        {
+          path:"/buyandsell",
+          element:<BuyAndSell/>
         },
       ]
     }, 
