@@ -21,6 +21,10 @@ import AllProds from './routes/buyAndSell/AllProds'
 import Products from './routes/buyAndSell/Products'
 import ProductView from './routes/buyAndSell/productview'
 
+import Login from './routes/buyAndSell/login'
+import Register from './routes/buyAndSell/Register'
+// import Table from './routes/buyAndSell/Table'
+
 function App() {
   // const [count, setCount] = useState(0)
 
@@ -65,6 +69,18 @@ function App() {
               path: "products/:id", // Note: no leading slash here
               element: <ProductView/>,
             },
+            { 
+              path: "login", // Note: no leading slash here
+              element: <Login/>,
+            },
+            { 
+              path: "register", // Note: no leading slash here
+              element: <Register/>,
+            }
+            // { 
+            //   path: "table", // Note: no leading slash here
+            //   element: <Table/>,
+            // },
           ]
         },
         {
