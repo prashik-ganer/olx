@@ -13,11 +13,23 @@ from typing import List,Dict,Any
 from bson.objectid import ObjectId
 
 # from fastapi.security import
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI()
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Replace with your frontend's URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # **********************************************
 # home page API
