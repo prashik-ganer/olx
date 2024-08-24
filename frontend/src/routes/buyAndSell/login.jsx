@@ -24,7 +24,8 @@ const Login = () => {
     if (!response.ok) {
       setErrorMessage(data.detail);
     } else {
-        console.log("data", data.access_token)
+
+      alert(`token : ${data.access_token}`);
       setToken(data.access_token);
     }
   };

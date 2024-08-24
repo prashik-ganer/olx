@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-import os
+from pymongo.collection import Collection
 
 client=MongoClient("mongodb+srv://OLX_Project:iTXdaSBaMQo1j2fV@cluster0.q0pye.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
@@ -9,8 +9,16 @@ client=MongoClient("mongodb+srv://OLX_Project:iTXdaSBaMQo1j2fV@cluster0.q0pye.mo
 
 database = client.campus_connect
 
-users_collection = database["users"]
-product_collection = database["products"]
+
+
+def get_product_collection()->Collection:
+    product_collection = database["products"]
+    return  product_collection
+
+def get_users_collection()->Collection:
+    users_collection = database["users"]
+    return  users_collection
+
 
 def user_helper(user) -> dict:
     return {
