@@ -9,6 +9,9 @@ from utility.jwttoken import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from schema.User import Token
 from fastapi.security import OAuth2PasswordRequestForm
 from datetime import datetime, timedelta
+from typing import List,Dict,Any
+from bson.objectid import ObjectId
+
 # from fastapi.security import
 
 app = FastAPI()
@@ -91,3 +94,60 @@ def create_product(prod:Product,current_user: dict = Depends(get_current_user)):
     product_collection.insert_one(product)
     return {"message":"Product added Successfully"}
 
+
+
+
+@app.get("/user-products")
+async def get_user_products(current_user: dict = Depends(get_current_user)):
+    if not current_user:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
+    user_id = current_user["_id"]
+    products = product_collection.find({"user_id": user_id})
+    response_data = []
+    for item in products:
+        item['_id'] = str(item['_id'])  # Convert ObjectId to string
+        item['user_id'] = str(item['user_id']) 
+        response_data.append(item)
+    return response_data
+
+# @app.get("/user-products")
+# async def get_user_products(current_user: dict = Depends(get_current_user)):
+#     if not current_user:
+#         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
+#     user_id = current_user['_id']
+#     products = product_collection.find({"user_id":user_id})
+#     response_data = []
+#     for item in products:
+#         item['_id'] = str(item['_id'])  # Convert ObjectId to string
+#         item['user_id'] = str(item['user_id']) 
+#         response_data.append(item)
+#     return response_data
+
+@app.get("/all-products")
+async def get_all_products():
+    products = product_collection.find()
+    response_data = []
+    for item in products:
+        item['_id'] = str(item['_id'])  # Convert ObjectId to string
+        item['user_id'] = str(item['user_id']) 
+        response_data.append(item)
+    return response_data
+
+
+
+@app.delete("/product/{product_id}")
+def delete_product(product_id: str, current_user: dict = Depends(get_current_user)):
+    # Convert product_id to ObjectId
+    try:
+        object_id = ObjectId(product_id)
+    except:
+        raise HTTPException(status_code=400, detail="Invalid product ID format")
+
+    # Check if the product exists and belongs to the current user
+    product = product_collection.find_one({"_id": object_id, "user_id": current_user["_id"]})
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found or access denied")
+
+    # Delete the product
+    product_collection.delete_one({"_id": object_id})
+    return {"message": "Product deleted successfully"}
