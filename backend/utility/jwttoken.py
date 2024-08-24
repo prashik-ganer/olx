@@ -3,9 +3,11 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 import os
 
-SECRET_KEY = "65bd7b40d913571ea9edf4d468fc7d9df805cda7e481ad3cabb189543e697b90"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+
+
 
 def create_access_token(data: dict):
     to_encode = data.copy()

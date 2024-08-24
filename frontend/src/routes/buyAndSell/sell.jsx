@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import  './sellproduct.css'
+import  './sellproduct.css' 
 import { UserContext } from "../../context/UserContext";
 
 
@@ -143,7 +143,7 @@ const Sell = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
+          "Authorization": "Bearer " + token,
         },
         body: JSON.stringify({
           product_name: product.product_name,
@@ -160,6 +160,8 @@ const Sell = () => {
       if (!response.ok) {
         console.log("Something went wrong when creating lead");
       } else {
+        const responseData = await response.json();
+        alert(responseData.product_id)
         console.log("Product submitted!");
       }
     };
@@ -169,7 +171,8 @@ const Sell = () => {
 
 
   return (
-    <div className="app-container">
+    <>
+    {token?<div className="app-container">
       <div className="preview-section">
         <h2>Product Preview</h2>
         <div className="preview">
@@ -295,7 +298,8 @@ const Sell = () => {
           </button>
         </form>
       </div>
-    </div>
+    </div>:<>{console.log(token)}</>}
+    </>
   );
 }
 

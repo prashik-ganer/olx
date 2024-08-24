@@ -1,11 +1,11 @@
 from pymongo import MongoClient
 from pymongo.collection import Collection
+import os
 
-client=MongoClient("mongodb+srv://OLX_Project:iTXdaSBaMQo1j2fV@cluster0.q0pye.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
-# db_url = os.getenv("MONGODB_URL")
-# print(db_url)
-# client=MongoClient(db_url)
+db_url = os.getenv("MONGODB_URL")
+print(db_url)
+client=MongoClient(db_url)
 
 database = client.campus_connect
 
