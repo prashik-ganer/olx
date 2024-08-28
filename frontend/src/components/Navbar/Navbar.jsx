@@ -1,16 +1,25 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar = () => {
   const location = useLocation();
-  const showButton = location.pathname === '/buyandsell';
+  const showButton = location.pathname === "/buyandsell";
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
       <div className="flex flex-wrap items-center justify-between mx-auto p-4">
-        <a href="https://flowbite.com/" className="flex items-center space-x-3 rtl:space-x-reverse">
-          <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">One Place</span>
+        <a
+          href="https://flowbite.com/"
+          className="flex items-center space-x-3 rtl:space-x-reverse"
+        >
+          <img
+            src="https://flowbite.com/docs/images/logo.svg"
+            className="h-8"
+            alt="Flowbite Logo"
+          />
+          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+            One Place
+          </span>
         </a>
 
         <div className="flex space-x-4 md:order-2">
@@ -35,13 +44,13 @@ const Navbar = () => {
         <div className="flex items-center justify-center w-full md:w-auto md:order-1">
           <ul className="flex space-x-8 font-medium md:flex-row">
             <li>
-              <a
-                href="#"
+              <Link
+                to="/"
                 className="block py-2 px-3 md:p-0 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:dark:text-blue-500"
                 aria-current="page"
               >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
               <a

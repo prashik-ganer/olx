@@ -1,16 +1,24 @@
 from pymongo import MongoClient
+from pymongo.collection import Collection
 import os
 
-client=MongoClient("mongodb+srv://OLX_Project:iTXdaSBaMQo1j2fV@cluster0.q0pye.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
-# db_url = os.getenv("MONGODB_URL")
-# print(db_url)
-# client=MongoClient(db_url)
+db_url = os.getenv("MONGODB_URL")
+print(db_url)
+client=MongoClient(db_url)
 
 database = client.campus_connect
 
-users_collection = database["users"]
-product_collection = database["products"]
+
+
+def get_product_collection()->Collection:
+    product_collection = database["products"]
+    return  product_collection
+
+def get_users_collection()->Collection:
+    users_collection = database["users"]
+    return  users_collection
+
 
 def user_helper(user) -> dict:
     return {

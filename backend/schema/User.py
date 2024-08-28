@@ -1,6 +1,5 @@
-from pydantic import BaseModel, Field, field_validator
-from typing import Annotated, Optional
-import re
+from pydantic import BaseModel
+from typing import  Optional
 
 class UserSignUp(BaseModel):
     user_name: str
